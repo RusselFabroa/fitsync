@@ -102,7 +102,26 @@
               </select>
             </div>
           </div> --}}
-          <div class="sm:col-span-2">
+          <div class="sm:col-span-1">
+            {{-- <label for="region" class="block text-sm font-medium leading-6 text-gray-900">State / Province</label> --}}
+            <div class="mt-2">
+              <select type="date" name="searchMonth" id="searchMonth" value="" autocomplete="searchMonth" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+          </div>
+          <div class="sm:col-span-1">
             {{-- <label for="region" class="block text-sm font-medium leading-6 text-gray-900">State / Province</label> --}}
             <div class="mt-2">
               <input type="date" name="searchDate" id="searchDate" value="{{$date}}" autocomplete="address-level1" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
