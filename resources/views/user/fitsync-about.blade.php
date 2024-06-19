@@ -65,12 +65,18 @@
                     <div class="img-container">
                         <img src="/images/gym_trainer.png" alt="Trainer Image"/>
                     </div>
-                    <h5 class=" mt-2 text-xl font-medium text-gray-500 mt-2 dark:text-gray-700">Coaches # {{$counterNumber}}</h5>
-                    <h5 class="mb-2 text-xl font-medium text-gray-800 dark:text-gray-700">{{$item->name}}</h5>
+                    <h5 class="text-right mt-2 text-xl font-medium text-gray-500 mt-2 dark:text-gray-700">Coaches #{{$counterNumber}}</h5>
+                    <h5 class="mb-0 text-xl font-medium text-gray-800 dark:text-gray-700">{{$item->name}}</h5>
+                    <h5 class="mb-0 text-sm font-normal text-gray-800 dark:text-gray-700">Occupation: {{$item->occupation}}</h5>
+                    <h5 class="mb-0 text-sm font-normal text-gray-800 dark:text-gray-700">Address: {{$item->address}}</h5>
+                    <h5 class="mb-2 text-sm font-normal text-gray-800 dark:text-gray-700">Age: {{$item->age}}</h5>
+
+
+
                     <h3 class="text-base font-normal leading-tight text-gray-700 dark:text-gray-400 font-semibold">Available Classes</h3>
-                    <div class="flex items-baseline text-gray-900 dark:text-white">
+                    <div class="flex items-baseline text-gray-900 dark:text-white min-h-[7rem]">
                        
-                        <ul role="list" class="space-y-1 my-5">
+                        <ul role="list" class="space-y-1 mt-2 mb-5">
 
                             @foreach ($classSchedule as $item2)
                              @if ($item2->user_id == $item->id )
@@ -80,8 +86,8 @@
                                     </svg>
                                      <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">{{$item2->class_title}}</span>
                                     </li>
-                            @else
-                            <p class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">---</p>
+                            {{-- @else
+                            <p class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">---</p> --}}
 
                             @endif
                            
