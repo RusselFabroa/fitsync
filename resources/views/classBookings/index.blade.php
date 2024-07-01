@@ -63,7 +63,7 @@
                 <img class="max-h-[30rem] max-w-full rounded-lg border-2 border-cyan-900" src="{{asset("/images/uploadedpic/workout.jpg")}}" alt="">
                 {{-- <img width="120" height="120" src="https://img.icons8.com/external-flatart-icons-flat-flatarticons/64/external-dumbell-gym-flatart-icons-flat-flatarticons.png" alt="external-dumbell-gym-flatart-icons-flat-flatarticons"/> --}}
             </div>
-            <div>
+            <div class="">
                 <a href="#">
                     <h5 class="mb-2 text-2xl text-center font-bold tracking-wide text-[#344955] dark:text-[#344955]">
                         {{ $data->class_title }}</h5>

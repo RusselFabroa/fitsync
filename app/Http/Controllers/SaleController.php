@@ -19,16 +19,31 @@ class SaleController extends Controller
         $search = $request->query('search');
         $status = $request->query('status');
         $date = $request->query('date');
+        $month = $request->query('month');
 
+
+            // $membership_data = MembershipFees::join('membership_info', 'membership_fees.membership_title', '=', 'membership_info.membership_title')
+            // ->leftJoin('users', 'membership_fees.user_id', '=', 'users.id')
+            // ->select('membership_fees.*', 'membership_info.membership_fee', 'users.name')
+            // ->where('users.name', 'like', '%'.$search.'%')
+            // ->whereDate('membership_fees.membership_payment_date', 'like', '%'.$date.'%')
+            // ->orWhere('membership_fees.membership_title', 'like', '%'.$status.'%')
 
             $membership_data = MembershipFees::join('membership_info', 'membership_fees.membership_title', '=', 'membership_info.membership_title')
             ->leftJoin('users', 'membership_fees.user_id', '=', 'users.id')
             ->select('membership_fees.*', 'membership_info.membership_fee', 'users.name')
-            ->where('users.name', 'like', '%'.$search.'%')
-            ->whereDate('membership_fees.membership_payment_date', 'like', '%'.$date.'%')
-            // ->orWhere('membership_fees.membership_title', 'like', '%'.$status.'%')
-
+            ->when($search, function ($query, $search) {
+                return $query->where('users.name', 'like', '%'.$search.'%');
+            })
+            ->when($date, function ($query, $date) {
+                return $query->whereDate('membership_fees.membership_payment_date', 'like', '%'.$date.'%');
+            })
+            ->when($month, function ($query, $month) {
+                return $query->whereMonth('membership_fees.membership_payment_date', $month);
+            })
             ->get();
+
+           
 
 
 

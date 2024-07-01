@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClassBookings;
+use App\Models\Classes;
 use App\Models\User;
 use App\Models\ClassSchedule;
+use App\Models\DailyClasses;
 use App\Models\MembershipFees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -43,7 +45,13 @@ class UserController extends Controller
             ];
         }
 
-        return view('superadmin.dashboard', compact('users', 'trainers', 'chartData', 'percentage'));
+
+        //Class
+        $classes = Classes::withoutTrashed()->get();
+        $daily_class = DailyClasses::withoutTrashed()->get();
+
+
+        return view('superadmin.dashboard', compact('users', 'trainers', 'chartData', 'percentage','classes','daily_class'));
     }
 
         public function trainerDashboard(Request $request)

@@ -20,6 +20,7 @@ use App\Http\Controllers\TrainingBookingsController;
 use App\Http\Controllers\TrainingScheduleController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\ClassesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,9 @@ Route::prefix('superadmin')->middleware(['web', 'superadmin'])->group(function (
     Route::get('/reportSale',[SaleController::class,'index'])->name('reportSale');
   
     Route::get('/printSale',[SaleController::class,'print'])->name('printSale');
+
+    Route::post('/saveClass',[ClassesController::class,'SaveClass'])->name('SaveClass');
+
 });
 
 Route::prefix('trainer')->middleware(['web', 'trainer'])->group(function () {

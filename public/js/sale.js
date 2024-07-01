@@ -5,7 +5,8 @@ function searchData(){
     var searchDate = document.getElementById('searchDate').value;
     // alert(searchContent+" "+searchStatus+" "+searchDate);
 
-    var url = '/superadmin/reportSale?search=' + searchContent + '&status=' + searchStatus + '&date=' + searchDate;
+    var searchMonth = document.getElementById('searchMonth').value;
+    var url = '/superadmin/reportSale?search=' + searchContent + '&status=' + searchStatus + '&month=' + searchMonth + '&date=' + searchDate;
       // Redirect to the URL
       window.location.href = url;
 }
