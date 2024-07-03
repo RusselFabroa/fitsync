@@ -1,9 +1,180 @@
 @extends('layouts.user-app')
+<head>
+    <style>
+        td, p, span{
+            font-size: .8rem;
+        }
 
+        th{
+            font-size: .9rem;
+        }
+    </style>
+</head>
 @section('content')
+
 <div class="font-poppins bg-white pr-20 pl-20 pt-16">
 
-    <h2 class="pb-2 text-4xl font-bold mb-2">AVAILABLE CLASSES</h2>
+    {{-- <section>
+        @foreach($reservedClassToday as $reserve)
+        <h5>{{$reserve->class_id}}</h5>
+        @endforeach
+
+        <hr>
+        <h4>{{$selectedDay}}</h4>
+    </section> --}}
+    <form action="/user/user-classes" method="get">
+    <div class="flex flex-row">
+        <div class="w-1/3"></div>
+        <div class="w-1/3 "></div>
+        
+        <div class="w-1/3 mb-2 flex">   
+            <div class="w-3/4">
+            
+                <select type="select" id="selectedDay" name="selectedDay" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ">
+                    <option value="{{$selectedDay}}" selected>{{$selectedDay}}</option>
+                    <hr>
+                    
+                    @foreach ($classDays as $current_day)
+                    <option value="{{$current_day->class_day}}">{{$current_day->class_day}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <button class="bg-gray-50 border border-gray-300 rounded-lg ms-2 px-4 py-1">Load</button>
+        </div>
+  
+    </div>
+</form>
+    
+<section class="border border-gray-300 rounded shadow p-3 ">
+    <h2 class="pb-2 text-2xl font-bold mb-2">DAILY CLASSES</h2>
+    @if (session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+@endif
+
+
+    <table class="min-w-full border-collapse mb-4 shadow">
+        <thead>
+          <tr>
+            <th class="text-md font-medium text-center border bg-gray-200" style="width:10%;">Day</th>
+          
+            <th class="text-md font-medium text-center border bg-gray-200" style="width:80%">Class Schedule</th>
+            {{-- <th class="text-md font-medium border bg-gray-200">Schedule</th> --}}
+            {{-- <th class="text-md font-medium border bg-gray-200"  style="width: 10%"></th> --}}
+          </tr>
+        </thead>
+        <tbody>
+            @foreach ($classDays as $current_day)
+            @if ($current_day->class_day == $selectedDay)
+            <tr class="border">
+                <td class="text-center border">{{$current_day->class_day}}</td>
+                {{-- <td class="border p-2">
+                  <h6>Sample Desc</h6>
+                 <p>Trainer: Asel</p>
+  
+                </td> --}}
+                <td class="border">
+                    @foreach($daily_class as $data)
+                        @if($current_day->class_day == $data->class_day )
+                      
+                            <table class="min-w-full border-collapse mb-3 shadow">
+                                <thead>
+                                  <tr>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Class Name</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 20%">Description</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Trainer</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Day</td>
+
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Start Time</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">End Time</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 10%">Attendees</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%"></td>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                              
+                                      <tr>
+                                          <td class="border text-center p-0">{{$data->class_name}}</td>
+                                          <td class="border text-center p-0">{{$data->class_descriptions}}</td>
+                                          <td class="border text-center p-0">{{$data->name}}</td>
+                                          <td class="border text-center p-0">{{$data->class_day}}</td>
+
+            
+                                          <td class="border text-center p-0">{{$data->class_start_time}}</td>
+                                          <td class="border text-center p-0">{{$data->class_end_time}}</td>
+                                     
+                                          <td class="border text-center p-0">
+                                                @php
+                                                   $countofAttendees = 0;
+                                                    foreach ($reservedClassesThisWeek as $reservedThisWeek) {
+                                                        if ($reservedThisWeek->class_id == $data->class_id && $reservedThisWeek->class_day == $data->class_day)
+                                                         {
+                                                            $countofAttendees++;
+                                                         }
+                                                     }
+                                                @endphp
+
+                                            {{$countofAttendees}}/{{$data->attendees_limit}}
+                                        
+                                        
+                                            </td>
+                                          <td class="border text-center p-0">
+                                            <form action="{{ route('AttendClass') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" id="class_id" name="class_id" value="{{$data->class_id}}">
+                                                <input type="hidden" id="user_id" name="user_id" value="{{$userId}}">
+                                                <input type="hidden" id="class_day" name="class_day" value="{{$data->class_day}}">
+                                                @php
+                                                    $isAlreadyReserved = false;
+                                                    foreach ($reservedClassToday as $reserve) {
+                                                        if($reserve->class_id == $data->class_id && $reserve->class_day == $data->class_day){
+                                                            $isAlreadyReserved = true;
+                                                        }
+                                                    }    
+                                                @endphp
+
+                                                @if ($isAlreadyReserved)
+                                                <button type="submit" disabled class="text-white bg-gray-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Reserved</button>
+                                                    
+                                                @else
+                                                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Attend</button>
+                                                    
+                                                @endif
+                                                
+                                            </form>
+                                            {{-- <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Attend</button> --}}
+                                          </td>
+                                      </tr>
+                                 
+                             
+                                </tbody>
+                              </table>
+                            
+                        @endif
+
+
+                    @endforeach
+                 
+                  
+                </td>
+                {{-- <td class="block pt-3"></td> --}}
+               
+              </tr>
+           
+            @endif
+            
+        @endforeach
+            </tbody>
+          </table>
+        </tbody>
+    </table>
+</section>
+
+<section  class="border border-gray-300 rounded shadow p-3 my-3 ">
+
+
+    <h2 class="pb-2 text-2xl font-bold mb-2">AVAILABLE TRAININGS</h2>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 py-2 mx-1 mb-4">
         @foreach($classschedule as $data)
         @if( $data->class_current > 0)
@@ -50,11 +221,11 @@
         <!-- Repeat the same structure for other images -->
     </div>
 
+</section>
 
 
-
-
-    <h2 class="pb-2 text-4xl mt-5 font-bold mb-2">OTHER CLASSES</h2>
+<section  class="border border-gray-300 rounded shadow p-3 my-3 ">
+    <h2 class="pb-2 text-2xl mt-5 font-bold mb-2">OTHER TRAININGS</h2>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 py-2 mx-1">
         @foreach($classschedule as $data)
         @if( $data->class_current <= 0)
@@ -118,4 +289,5 @@
 
 
 </div>
+</section>
 @endsection

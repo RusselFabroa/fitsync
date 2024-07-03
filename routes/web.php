@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('superadmin')->middleware(['web', 'superadmin'])->group(function () {
     Route::get('/superadmin-dashboard', [UserController::class, 'superadminDashboard'])->name('superadmin.superadmin-dashboard');
+    Route::get('/superadmin-dashboard-edit/{class_id}', [UserController::class, 'superadminDashboardEdit'])->name('superadmin.superadmin-dashboard-edit');
 
     Route::resources([
         'registerMember' => RegisterMemberController::class,
@@ -60,6 +61,8 @@ Route::prefix('superadmin')->middleware(['web', 'superadmin'])->group(function (
     Route::get('/printSale',[SaleController::class,'print'])->name('printSale');
 
     Route::post('/saveClass',[ClassesController::class,'SaveClass'])->name('SaveClass');
+    Route::get('/deleteClass',[ClassesController::class,'DeleteClass'])->name('DeleteClass');
+
 
 });
 
@@ -107,8 +110,10 @@ Route::prefix('user')->middleware(['web', 'user'])->group(function () {
     ]);
     Route::get('user-classes/create/{classId}', [ClassBookingsController::class, 'create'])->name('user-classes.create');
     Route::get('user-pendingclasses/', [ClassBookingsController::class, 'pending'])->name('user-classes.pending');
-    Route::delete('user-classes/userdestroy/{id}', [ClassBookingsController::class, 'userdestroy'])
-        ->name('user-classes.userdestroy');
+    Route::delete('user-classes/userdestroy/{id}', [ClassBookingsController::class, 'userdestroy'])->name('user-classes.userdestroy');
+        
+
+    Route::post('AttendClass', [ClassesController::class, 'AttendClass'])->name('AttendClass');
 });
 
 

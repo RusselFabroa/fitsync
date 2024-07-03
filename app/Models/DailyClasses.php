@@ -20,6 +20,7 @@ class DailyClasses extends Model
         'class_day',
         'class_start_time',
         'class_end_time',
+       
         'current_attendees',
         'attendees_limit',
         'status'

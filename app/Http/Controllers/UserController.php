@@ -47,11 +47,36 @@ class UserController extends Controller
 
 
         //Class
-        $classes = Classes::withoutTrashed()->get();
+        $classes = Classes::join('users','classes.class_trainer','=','users.id')
+                        ->select('classes.*','users.name')->get();
+
+
+
         $daily_class = DailyClasses::withoutTrashed()->get();
+        $class_trainers = User::where('role','trainer')->get();
 
 
-        return view('superadmin.dashboard', compact('users', 'trainers', 'chartData', 'percentage','classes','daily_class'));
+        return view('superadmin.dashboard', compact('users', 'trainers', 'chartData', 'percentage','classes','daily_class','class_trainers'));
+    }
+
+    public function superadminDashboardEdit($class_id)
+    {
+        $trainers = User::where('role', '=', 'trainer')->count();
+        $users = User::where('role', '=', 'user')->count();
+
+     
+        //Class
+        $class = Classes::join('users','classes.class_trainer','=','users.id')
+                    ->where('classes.class_id',$class_id)
+                        ->select('classes.*','users.name')->first();
+
+
+
+        $daily_class = DailyClasses::where('class_id',$class_id)->get();
+        $class_trainers = User::where('role','trainer')->get();
+
+
+        return view('superadmin.dashboard-edit', compact('users', 'trainers','class','daily_class','class_trainers'));
     }
 
         public function trainerDashboard(Request $request)
@@ -178,32 +203,32 @@ class UserController extends Controller
         return view('user.dashboard');
     }
 
-    public function sendReminder(Request $request)
-{
-    $userId = $request->input('user');
-    $reminderType = $request->input('reminder_type');
+    // public function sendReminder(Request $request)
+    //         {
+    //             $userId = $request->input('user');
+    //             $reminderType = $request->input('reminder_type');
 
-    $user = User::find($userId);
+    //             $user = User::find($userId);
 
-    if (!$user) {
-        return redirect()->back()->with('error', 'User not found');
-    }
+    //             if (!$user) {
+    //                 return redirect()->back()->with('error', 'User not found');
+    //             }
 
-    $twilioService = new TwilioService();
+    //             $twilioService = new TwilioService();
 
-    if ($reminderType === 'due_reminder') {
-        // Logic for due reminder message
-        $message = "Hello {$user->name}, your membership will expire in 3 days.";
-    } elseif ($reminderType === 'inactive_account_reminder') {
-        // Logic for inactive account reminder message
-        $message = "Hello {$user->name}, your membership is currently inactive.";
-    } else {
-        return redirect()->back()->with('error', 'Invalid reminder type');
-    }
+    //             if ($reminderType === 'due_reminder') {
+    //                 // Logic for due reminder message
+    //                 $message = "Hello {$user->name}, your membership will expire in 3 days.";
+    //             } elseif ($reminderType === 'inactive_account_reminder') {
+    //                 // Logic for inactive account reminder message
+    //                 $message = "Hello {$user->name}, your membership is currently inactive.";
+    //             } else {
+    //                 return redirect()->back()->with('error', 'Invalid reminder type');
+    //             }
 
-    // Send SMS message
-    $twilioService->sendMessage($user->phone_number, $message);
+    //             // Send SMS message
+    //             $twilioService->sendMessage($user->phone_number, $message);
 
-    return redirect()->back()->with('success', 'Reminder sent successfully');
-}
+    //             return redirect()->back()->with('success', 'Reminder sent successfully');
+    //         }
 }

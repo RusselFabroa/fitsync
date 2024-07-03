@@ -14,6 +14,12 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        td{
+          
+            font-size: .8rem;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -23,7 +29,7 @@
         <a href="#"
             class="block max-w-sm p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div class="flex justify-between pt-2">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Trainers</h5>
+                <h5 class="mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Trainers</h5>
                 <p class="font-bold pr-2 text-xl text-gray-700 dark:text-gray-400">{{ $trainers }}</p>
             </div>
         </a>
@@ -32,7 +38,7 @@
         <a href="#"
             class="block max-w-sm p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div class="flex justify-between pt-2">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Members</h5>
+                <h5 class="mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Members</h5>
                 <p class="font-bold pr-2 text-xl text-gray-700 dark:text-gray-400">{{ $users }}</p>
             </div>
         </a>
@@ -52,7 +58,7 @@
     </div>
 
    <hr class="mb-3">
-    <section class="shadow rounded mx-9">
+    <section class="shadow rounded mx-9 mb-5 border border-2 p-4">
         @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -63,15 +69,28 @@
         </div>
         @endif
 
-        <h3 class="font-bold mb-2">Daily Classes</h3>
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">DAILY CLASSES</h5>
         <button type="button" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Add Class</button>
+        @php
+            $class_Num = 1;
+        @endphp
+            
+        
         @foreach ($classes as $class)
         <table class="min-w-full border-collapse mb-4 shadow">
           <thead>
             <tr>
-              <th class="text-md font-medium text-center border" style="width:10%;">Class Name</th>
-              <th class="text-md font-medium text-center border" style="width:20%">Class Description</th>
-              <th class="text-md font-medium border">Schedule</th>
+              <th class="text-md font-medium text-center border bg-gray-200" style="width:10%;">Class #{{$class_Num}}</th>
+            
+              <th class="text-md font-medium text-center border bg-gray-200" style="width:20%">Class Description</th>
+              <th class="text-md font-medium border bg-gray-200">Schedule</th>
+              <th class="text-md font-medium border bg-gray-200"  style="width: 10%"></th>
             </tr>
           </thead>
           <tbody>
@@ -79,7 +98,11 @@
            
             <tr class="border">
               <td class="text-center border">{{$class->class_name}}</td>
-              <td class="border p-2">{{$class->class_descriptions}}</td>
+              <td class="border p-2">
+                <h6 class="mb-2">{{$class->class_descriptions}}</h6>
+               <p><b>Trainer:</b> {{$class->name}}</p>
+
+              </td>
               <td class="border">
                 <table class="min-w-full border-collapse">
                   <thead>
@@ -108,10 +131,22 @@
                   </tbody>
                 </table>
               </td>
+              <td class="block pt-3">
+                <a href="/superadmin/superadmin-dashboard-edit/{{$class->class_id}}" class="px-4 py-1 mb-2 rounded bg-white border-2 w-full">Edit</a>
+                <form action="{{ route('DeleteClass') }}" method="GET">
+                    @csrf
+                    <input type="hidden" id="class_id" name="class_id" value="{{$class->class_id}}">
+                    <button type="submit" class="px-4 py-1 rounded bg-white border-2 w-full">Delete</button>
+                </form>
+                {{-- <a href="{{route('DeleteClass')}}" class="px-4 py-1 rounded bg-white border-2 w-full" >Delete</a> --}}
+            </td>
             </tr>
       
           </tbody>
         </table>
+       @php 
+       $class_Num = $class_Num + 1;
+       @endphp
         @endforeach
       </section>
       
@@ -121,7 +156,7 @@
 <div id="authentication-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black-200">
     <div class="relative p-4 w-full max-w-md max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="relative bg-white border border-2 rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -141,23 +176,32 @@
                   
 
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class Name</label>
+                        <label for="email" class="block mb-0 text-sm font-medium text-gray-900 dark:text-white">Class Name</label>
                         <input type="text" name="class_name" id="class_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="" required />
                     </div>
                     <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class Description</label>
+                        <label for="password" class="block mb-0 text-sm font-medium text-gray-900 dark:text-white">Class Description</label>
                         <textarea name="class_description" id="class_description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required></textarea>
                     </div>
                     <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start Time</label>
+                        <label for="" class="block mb-0 text-sm font-medium text-gray-900 dark:text-white">Trainer</label>
+                        <select name="class_trainer" id="class_trainer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                           @foreach($class_trainers as $trainor){
+                            <option value="{{$trainor->id}}">{{$trainor->name}}</option>
+                           }        
+                           @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-0 text-sm font-medium text-gray-900 dark:text-white">Start Time</label>
                         <input type="time" name="start_time" id="start_time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required />
                     </div>
                     <div>
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End Time</label>
+                        <label for="password" class="block mb-0 text-sm font-medium text-gray-900 dark:text-white">End Time</label>
                         <input type="time" name="end_time" id="end_time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required />
                     
                     </div>
-                    <label for="" class="block mb-2 text-sm font-bold text-gray-900 dark:text-white">Day</label>
+                    <label for="" class="block mb-0 text-sm font-bold text-gray-900 dark:text-white">Day</label>
 
                     <div class="">
                         <div class="flex items-start">

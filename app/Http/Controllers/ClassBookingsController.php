@@ -10,17 +10,52 @@ use App\Models\SelectedExercise;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreClassBookingsRequest;
 use App\Http\Requests\UpdateClassBookingsRequest;
-
+use App\Models\DailyClasses;
+use App\Models\Classes;
+use App\Models\ReservedClass;
+use Carbon\Carbon;
 
 class ClassBookingsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $selectedDay = Carbon::today()->format('l');
+
+        if($request->hasAny('selectedDay')){
+            $selectedDay = $request->selectedDay;
+        }
+
+        $userId = Auth::id();
         $classschedule = ClassSchedule::all();
-        return view('classBookings.index', compact('classschedule'));
+
+        $classDays = DailyClasses::withoutTrashed()->distinct()->Get('class_day');
+
+        $class = Classes::join('users','classes.class_trainer','=','users.id')
+                 ->select('classes.*','users.name')->first();
+
+        $daily_class = DailyClasses::leftJoin('classes','daily_classes.class_id','=','classes.class_id')
+        ->leftJoin('users','classes.class_trainer','=','users.id')
+        ->select('daily_classes.*','classes.*','users.name')
+        ->where('daily_classes.status','checked')
+        ->withoutTrashed()->get();
+
+        $classAll = DailyClasses::withoutTrashed()->get();
+        $reservedClassToday = ReservedClass::where('class_date',Carbon::today())->where('user_id',$userId)->get();
+
+ // Get the start and end of the current week
+    $startOfWeek = Carbon::now()->startOfWeek();
+    $endOfWeek = Carbon::now()->endOfWeek();
+    $reservedClassesThisWeek = ReservedClass::withoutTrashed()
+    ->whereBetween('class_date', [$startOfWeek, $endOfWeek])
+    ->get();
+
+
+
+
+        return view('classBookings.index', compact('classschedule','classDays','class','daily_class','classAll','userId','reservedClassToday','selectedDay','reservedClassesThisWeek'));
     }
 
     public function trainerindex()

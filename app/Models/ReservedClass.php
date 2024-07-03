@@ -6,18 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Classes extends Model
+class ReservedClass extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = "reserved_classes";
 
-    protected $table = "classes";
-
-    protected $primaryKey = 'class_id';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
-        'class_name',
-        'class_descriptions',
-        'class_trainer',
+        'class_date',
+        'class_day',
+        'class_id',
+        'user_id',
+        'status'
+       
         
     ];
 }
