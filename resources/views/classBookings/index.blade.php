@@ -93,7 +93,15 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                              
+                                    @php
+                                    $countofAttendees = 0;
+                                     foreach ($reservedClassesThisWeek as $reservedThisWeek) {
+                                         if ($reservedThisWeek->class_id == $data->class_id && $reservedThisWeek->class_day == $data->class_day)
+                                          {
+                                             $countofAttendees++;
+                                          }
+                                      }
+                                 @endphp
                                       <tr>
                                           <td class="border text-center p-0">{{$data->class_name}}</td>
                                           <td class="border text-center p-0">{{$data->class_descriptions}}</td>
@@ -105,15 +113,7 @@
                                           <td class="border text-center p-0">{{$data->class_end_time}}</td>
                                      
                                           <td class="border text-center p-0">
-                                                @php
-                                                   $countofAttendees = 0;
-                                                    foreach ($reservedClassesThisWeek as $reservedThisWeek) {
-                                                        if ($reservedThisWeek->class_id == $data->class_id && $reservedThisWeek->class_day == $data->class_day)
-                                                         {
-                                                            $countofAttendees++;
-                                                         }
-                                                     }
-                                                @endphp
+                                             
 
                                             {{$countofAttendees}}/{{$data->attendees_limit}}
                                         
@@ -133,8 +133,31 @@
                                                         }
                                                     }    
                                                 @endphp
+                                                 {{--  use Carbon\Carbon;Check if pass day --}}
+                                                
+                                                @php
 
-                                                @if ($isAlreadyReserved)
+                                                  
+                                                    $isDayPast = false;
+                                                    
+                                                    $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                                                    $today = \Carbon\Carbon::now()->dayOfWeekIso;
+                                                   
+
+                                                    
+                                                    $dayIndex = array_search($data->class_day, $daysOfWeek) + 1;
+                                                    $isDayPast = $dayIndex < $today ? true : false;
+                                                  
+                                                @endphp
+
+
+                                                @if($isDayPast)
+                                                <button type="submit" disabled class="text-white bg-gray-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">End</button>
+                                                
+                                                @elseif ($countofAttendees >= $data->attendees_limit)
+                                                <button type="submit" disabled class="text-white bg-gray-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Class is full</button>
+
+                                                @elseif ($isAlreadyReserved)
                                                 <button type="submit" disabled class="text-white bg-gray-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Reserved</button>
                                                     
                                                 @else

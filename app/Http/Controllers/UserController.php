@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Services\TwilioService;
 use Barryvdh\DomPDF\Facade\PDF;
+use App\Models\ReservedClass;
 
 class UserController extends Controller
 {
@@ -56,7 +57,15 @@ class UserController extends Controller
         $class_trainers = User::where('role','trainer')->get();
 
 
-        return view('superadmin.dashboard', compact('users', 'trainers', 'chartData', 'percentage','classes','daily_class','class_trainers'));
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
+        $reservedClassesThisWeek = ReservedClass::withoutTrashed()
+        ->whereBetween('class_date', [$startOfWeek, $endOfWeek])
+        ->get();
+
+
+
+        return view('superadmin.dashboard', compact('users', 'trainers', 'chartData', 'percentage','classes','daily_class','class_trainers','reservedClassesThisWeek'));
     }
 
     public function superadminDashboardEdit($class_id)

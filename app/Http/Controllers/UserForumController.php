@@ -16,7 +16,9 @@ class UserForumController extends Controller
         $forums = Forum::join('users', 'forums.user_id', '=', 'users.id')
         ->select('forums.*', 'users.name as user_name')
         ->get();
-        return view('user.forums.index', compact('forums'));
+
+        $AuthUserId = Auth::id();
+        return view('user.forums.index', compact('forums','AuthUserId'));
     }
 
     /**

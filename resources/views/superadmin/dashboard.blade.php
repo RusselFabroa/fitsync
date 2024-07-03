@@ -111,7 +111,7 @@
                       <th class="border p-0" style="width: 20%">Start Time</th>
                       <th class="border p-0" style="width: 20%">End Time</th>
                       <th class="border p-0" style="width: 15%">Attendees Limit</th>
-                      <th class="border p-0" style="width: 15%">Current Attendees</th>
+                      <th class="border p-0" style="width: 15%">Attendees this Week</th>
                       <th class="border p-0" style="width: 15%">Status</th>
                     </tr>
                   </thead>
@@ -123,7 +123,19 @@
                             <td class="border text-center p-0">{{ $items->class_start_time }}</td>
                             <td class="border text-center p-0">{{ $items->class_end_time }}</td>
                             <td class="border text-center p-0">{{ $items->attendees_limit }}</td>
-                            <td class="border text-center p-0">{{ $items->current_attendees }}</td>
+                            <td class="border text-center p-0">
+                                @php
+                                $countofAttendees = 0;
+                                 foreach ($reservedClassesThisWeek as $reservedThisWeek) {
+                                     if ($reservedThisWeek->class_id == $items->class_id && $reservedThisWeek->class_day == $items->class_day)
+                                      {
+                                         $countofAttendees++;
+                                      }
+                                  }
+
+                             @endphp
+                             {{$countofAttendees}}
+                            </td>
                             <td class="border text-center p-0">Open</td>
                         </tr>
                     @endif
