@@ -82,14 +82,14 @@
                                 <thead>
                                   <tr>
                                     <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Class Name</td>
-                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 20%">Description</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 30%">Description</td>
                                     <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Trainer</td>
-                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Day</td>
+                                    {{-- <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Day</td> --}}
 
-                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">Start Time</td>
-                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%">End Time</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 10%">Start Time</td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 10%">End Time</td>
                                     <td class="border p-0 text-center font-semibold bg-green-100" style="width: 10%">Attendees</td>
-                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 15%"></td>
+                                    <td class="border p-0 text-center font-semibold bg-green-100" style="width: 10%"></td>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -98,7 +98,7 @@
                                           <td class="border text-center p-0">{{$data->class_name}}</td>
                                           <td class="border text-center p-0">{{$data->class_descriptions}}</td>
                                           <td class="border text-center p-0">{{$data->name}}</td>
-                                          <td class="border text-center p-0">{{$data->class_day}}</td>
+                                          {{-- <td class="border text-center p-0">{{$data->class_day}}</td> --}}
 
             
                                           <td class="border text-center p-0">{{$data->class_start_time}}</td>
