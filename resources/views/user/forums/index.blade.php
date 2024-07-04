@@ -9,7 +9,7 @@
     <div class="flex mb-2 {{ $data->user_id === $AuthUserId ? 'justify-end' : 'justify-start' }}">
         <div class="max-w-md w-auto px-7 py-1 {{ $data->user_id === $AuthUserId ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900' }} rounded-lg">
             <p class="text-start">{{ $data->forum_content }}</p>
-            <p class="italic text-xs  text-end {{ $data->user_id === $AuthUserId ? 'text-white' : 'text-red-700' }}">- {{ $data->user_name }}</p>
+            <p class="italic text-xs  text-end {{ $data->user_id === $AuthUserId ? 'text-white' : 'text-blue-700' }}">- {{ $data->user_name }}</p>
         </div>
       
         
