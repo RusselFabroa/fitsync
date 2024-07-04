@@ -11,8 +11,7 @@
             <p class="text-start">{{ $data->forum_content }}</p>
             <p class="italic text-xs  text-end {{ $data->user_id === $AuthUserId ? 'text-white' : 'text-blue-700' }}">- {{ $data->user_name }}</p>
         </div>
-      
-        
+
     </div>
     @endforeach
 </div>
